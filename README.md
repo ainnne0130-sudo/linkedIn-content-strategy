@@ -4,7 +4,7 @@ A simple, single-page report for the Week 5 main project: a small LinkedIn conte
 
 ## Live Demo
 
-https://YOUR-GITHUB-USERNAME.github.io/linkedin-content-strategy/
+https://github.com/ainnne0130-sudo/linkedIn-content-strategy
 
 ## What This Project Shows
 
