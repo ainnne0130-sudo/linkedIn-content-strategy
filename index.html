@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LinkedIn Content Strategy & Growth</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: #f5f7fb; color: #1f2937; }
+    .hero { background: linear-gradient(135deg, #0a66c2, #004182); color: #fff; padding: 64px 0; }
+    .hero p { opacity: .9; }
+    .section-title { font-weight: 700; margin-bottom: 24px; }
+    .card { border: 0; box-shadow: 0 2px 10px rgba(0, 0, 0, .06); }
+    .stat-number { font-size: 2rem; font-weight: 700; color: #0a66c2; }
+    .pillar-badge { background: #e8f1fb; color: #0a66c2; font-weight: 600; }
+    .pending { color: #9ca3af; font-style: italic; }
+    footer { background: #111827; color: #9ca3af; padding: 24px 0; }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <header class="hero text-center">
+    <div class="container">
+      <h1 class="display-5 fw-bold" id="title"></h1>
+      <p class="lead mb-1" id="subtitle"></p>
+      <small id="updated"></small>
+    </div>
+  </header>
+
+  <main class="container py-5">
+
+    <!-- Process -->
+    <section class="mb-5">
+      <h2 class="section-title">Process Followed</h2>
+      <div class="card p-3">
+        <p class="mb-0 text-center">
+          Research &rarr; Audience &rarr; Content Pillars &rarr; Content Calendar &rarr; Post Brief &rarr;
+          AI-Assisted Draft &rarr; Human Review &rarr; Publish &rarr; Measure &rarr; Analyze &rarr; Improve
+        </p>
+      </div>
+    </section>
+
+    <!-- Summary numbers -->
+    <section class="mb-5">
+      <h2 class="section-title">Campaign Summary</h2>
+      <div class="row g-3" id="summary"></div>
+    </section>
+
+    <!-- Audience & pillars -->
+    <section class="mb-5">
+      <h2 class="section-title">Audience &amp; Content Pillars</h2>
+      <div class="row g-3" id="brands"></div>
+    </section>
+
+    <!-- Calendar -->
+    <section class="mb-5">
+      <h2 class="section-title">Content Calendar</h2>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Date</th>
+                <th>Page</th>
+                <th>Post</th>
+                <th>Topic</th>
+                <th>Pillar</th>
+                <th>Format</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="calendar"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Performance -->
+    <section class="mb-5">
+      <h2 class="section-title">Performance</h2>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Page</th>
+                <th>Post</th>
+                <th>Impressions</th>
+                <th>Clicks</th>
+                <th>CTR</th>
+                <th>Reactions</th>
+                <th>Comments</th>
+                <th>Reposts</th>
+                <th>Engagement</th>
+              </tr>
+            </thead>
+            <tbody id="performance"></tbody>
+          </table>
+        </div>
+      </div>
+      <p class="text-muted small mt-2" id="note"></p>
+    </section>
+
+    <!-- Learnings -->
+    <section class="mb-5">
+      <h2 class="section-title">Learnings &amp; Next Steps</h2>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="card h-100 p-3">
+            <h5 class="text-success">Continue</h5>
+            <ul class="mb-0" id="continue"></ul>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 p-3">
+            <h5 class="text-warning">Change</h5>
+            <ul class="mb-0" id="change"></ul>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 p-3">
+            <h5 class="text-primary">Test</h5>
+            <ul class="mb-0" id="test"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="text-center">
+    <div class="container">
+      <small>Week 5 Project: LinkedIn Content Strategy &amp; Growth</small>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script>
+    // Helpers
+    const show = (v, suffix = "") =>
+      v === null || v === undefined
+        ? '<span class="pending">Pending</span>'
+        : v + suffix;
+
+    const byId = (id) => document.getElementById(id);
+
+    // Hero
+    byId("title").textContent = campaign.title;
+    byId("subtitle").textContent = campaign.subtitle;
+    byId("updated").textContent = "Last updated: " + campaign.lastUpdated;
+
+    // Summary (sirf un posts ka total jin ke numbers aa chuke hain)
+    const done = posts.filter((p) => p.impressions !== null);
+    const sum = (key) => done.reduce((t, p) => t + p[key], 0);
+    const totalImp = sum("impressions");
+    const totalClicks = sum("clicks");
+    const totalReact = sum("reactions");
+    const avgEng = done.length
+      ? (done.reduce((t, p) => t + p.engagement, 0) / done.length).toFixed(2)
+      : 0;
+    const best = done.reduce((a, b) => (b.engagement > a.engagement ? b : a), done[0]);
+
+    const stats = [
+      ["Posts Planned", posts.length],
+      ["Total Impressions", totalImp],
+      ["Total Clicks", totalClicks],
+      ["Total Reactions", totalReact],
+      ["Avg. Engagement", avgEng + "%"],
+      ["Best Post", best.brand + " #" + best.no + " (" + best.engagement + "%)"]
+    ];
+
+    byId("summary").innerHTML = stats
+      .map(
+        (s) => `
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="card text-center p-3 h-100">
+            <div class="stat-number">${s[1]}</div>
+            <div class="text-muted small">${s[0]}</div>
+          </div>
+        </div>`
+      )
+      .join("");
+
+    // Brands
+    byId("brands").innerHTML = brands
+      .map(
+        (b) => `
+        <div class="col-md-6">
+          <div class="card h-100 p-4">
+            <h5 class="fw-bold">${b.name}</h5>
+            <p class="text-muted mb-2">${b.focus}</p>
+            <p><strong>Target audience:</strong> ${b.audience}</p>
+            <div>${b.pillars
+              .map((p) => `<span class="badge pillar-badge me-1">${p}</span>`)
+              .join("")}</div>
+          </div>
+        </div>`
+      )
+      .join("");
+
+    // Calendar
+    const sorted = [...posts].sort((a, b) => new Date(a.date) - new Date(b.date));
+    byId("calendar").innerHTML = sorted
+      .map(
+        (p) => `
+        <tr>
+          <td>${p.date}</td>
+          <td>${p.brand}</td>
+          <td>#${p.no}</td>
+          <td>${p.topic}</td>
+          <td><span class="badge pillar-badge">${p.pillar}</span></td>
+          <td>${p.format}</td>
+          <td>${p.status}</td>
+        </tr>`
+      )
+      .join("");
+
+    // Performance
+    byId("performance").innerHTML = posts
+      .map(
+        (p) => `
+        <tr>
+          <td>${p.brand}</td>
+          <td>#${p.no}</td>
+          <td>${show(p.impressions)}</td>
+          <td>${show(p.clicks)}</td>
+          <td>${show(p.ctr, "%")}</td>
+          <td>${show(p.reactions)}</td>
+          <td>${show(p.comments)}</td>
+          <td>${show(p.reposts)}</td>
+          <td>${show(p.engagement, "%")}</td>
+        </tr>`
+      )
+      .join("");
+
+    byId("note").textContent = note;
+
+    // Learnings
+    ["continue", "change", "test"].forEach((key) => {
+      byId(key).innerHTML = learnings[key].map((t) => `<li>${t}</li>`).join("");
+    });
+  </script>
+</body>
+</html>
